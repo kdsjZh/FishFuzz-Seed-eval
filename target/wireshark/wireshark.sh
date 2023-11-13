@@ -69,7 +69,7 @@ if [ "$FUZZER" = "ffapp" ]; then
 
 elif [ "$FUZZER" = "aflpp" ]; then
 
-  export LIB_FUZZING_ENGINE="/AFL++/libAFLDriver.a"
+  export LIB_FUZZING_ENGINE="/AFL++/utils/aflpp_driver/aflpp_driver.o"
   
 fi
 

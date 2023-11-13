@@ -16,7 +16,7 @@ RUN mkdir -p /build && \
     cd /llvm/ && git checkout bf7f8d6fa6f460bf0a16ffec319cd71592216bf4 && \
     wget https://github.com/kdsjZh/FishFuzz/raw/no_asan/FF_AFL++/asan_patch/llvm-15.0/llvm-15-asan.diff && \
     wget https://github.com/kdsjZh/FishFuzz/raw/no_asan/FF_AFL++/asan_patch/llvm-15.0/FishFuzzAddressSanitizer.cpp && \
-    sed -i '110d' llvm/lib/Transforms/Instrumentation/FishFuzzAddressSanitizer.cpp && \
+    sed -i '110d' FishFuzzAddressSanitizer.cpp && \
     git apply llvm-15-asan.diff && \
     mv FishFuzzAddressSanitizer.cpp llvm/lib/Transforms/Instrumentation/ && \
     cd /llvm/ && mkdir build && cd build &&\
