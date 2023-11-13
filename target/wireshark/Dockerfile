@@ -1,9 +1,12 @@
 FROM fishfuzz/eval:base 
 
-RUN wget https://raw.githubusercontent.com/kdsjZh/FishFuzz-Seed-eval/main/target/wireshark.sh && \
+RUN wget https://raw.githubusercontent.com/kdsjZh/FishFuzz-Seed-eval/main/target/wireshark/wireshark.sh && \
     chmod +x /wireshark.sh && \
     FUZZER=ffapp OUT=/out ./wireshark.sh && \
     FUZZER=aflpp OUT=/out ./wireshark.sh 
+
+RUN mkdir -p /out/seeds && \
+    find /repo -name "*.pcap" -exec cp {} /out/seeds/ \;
 
 RUN echo "#!/bin/bash" > /out/ffapp/run.sh  && \
     echo "TMP_DIR=/out/ffapp/TEMP FUZZSHARK_TARGET=tcp AFL_SKIP_CPUFREQ=1 AFL_NO_AFFINITY=1 \\" >> /out/ffapp/run.sh  && \
