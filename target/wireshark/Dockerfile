@@ -1,4 +1,4 @@
-FROM fishfuzz/eval:base 
+FROM fishfuzz/eval-large:base 
 
 RUN wget https://raw.githubusercontent.com/kdsjZh/FishFuzz-Seed-eval/main/target/wireshark/wireshark.sh && \
     chmod +x /wireshark.sh && \
