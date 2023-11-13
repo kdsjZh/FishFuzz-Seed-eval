@@ -10,19 +10,20 @@ from argparse import ArgumentTypeError as ArgTypeErr
 # number of physical cores, we don't want to use logical 
 MAXIUM_CORES=16
 
-fuzzer_list = ['ffafl', 'aflpp']
+fuzzer_list = ['ffapp', 'aflpp']
 benchmark_list = ['wireshark']
 
 def construct_docker_cmd(workdir, fuzzer_name, benchmark_name, bind_cpu_id, n_trial, timeout):
   docker_cmd = 'docker run -dt ' 
-  docker_cmd += '-v %s/%s/%s/%d:%s ' % (workdir, benchmark_name, fuzzer_name, n_trial,  "/out")
+  docker_cmd += '-v %s/%s/%s/%d:%s ' % (workdir, benchmark_name, fuzzer_name, n_trial,  "/work")
   docker_cmd += '--name %s_%s_%d ' % (benchmark_name, fuzzer_name, n_trial)
   docker_cmd += '--cpuset-cpus %d ' % (bind_cpu_id)
   # make sure current user have access to shared dir without root privilage
   # for tic's permission, disable this feature
   # docker_cmd += '--user $(id -u $(whoami)) --privileged '
   docker_cmd += 'fishfuzz/eval-large:%s ' % (benchmark_name)
-  docker_cmd += '"timeout -s KILL --preserve-status %s /out/%s/run.sh"' % (timeout, fuzzer_name)
+  # docker_cmd += '"timeout -s KILL --preserve-status %s /out/%s/run.sh"' % (timeout, fuzzer_name)
+  docker_cmd = '/out/%s/run.sh"' % (fuzzer_name)
   return docker_cmd
 
 def docker_run_all_trial(workdir, n_trial, timeout):
