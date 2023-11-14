@@ -22,7 +22,7 @@ RUN mkdir -p /build && \
     cd /llvm/ && mkdir build && cd build &&\
     CFLAGS="" CXXFLAGS="" CC=gcc CXX=g++ \
     cmake -DCMAKE_BUILD_TYPE=Release \
-          -DLLVM_ENABLE_PROJECTS="compiler-rt;clang" \
+          -DLLVM_ENABLE_PROJECTS="compiler-rt;clang;lld" \
           -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi" ../llvm && \
     make -j$(nproc) 
 
