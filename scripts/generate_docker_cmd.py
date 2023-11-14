@@ -10,7 +10,7 @@ from argparse import ArgumentTypeError as ArgTypeErr
 # number of physical cores, we don't want to use logical 
 MAXIUM_CORES=16
 
-fuzzer_list = ['ffapp', 'aflpp']
+fuzzer_list = ['ffapp', 'ffexp', 'aflpp']
 benchmark_list = ['wireshark']
 
 def construct_docker_cmd(workdir, fuzzer_name, benchmark_name, bind_cpu_id, n_trial, timeout):
