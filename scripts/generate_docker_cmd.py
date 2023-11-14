@@ -23,7 +23,7 @@ def construct_docker_cmd(workdir, fuzzer_name, benchmark_name, bind_cpu_id, n_tr
   # docker_cmd += '--user $(id -u $(whoami)) --privileged '
   docker_cmd += 'fishfuzz/eval-large:%s ' % (benchmark_name)
   # docker_cmd += '"timeout -s KILL --preserve-status %s /out/%s/run.sh"' % (timeout, fuzzer_name)
-  docker_cmd = '/out/%s/run.sh"' % (fuzzer_name)
+  docker_cmd += '"/out/%s/run.sh"' % (fuzzer_name)
   return docker_cmd
 
 def docker_run_all_trial(workdir, n_trial, timeout):
