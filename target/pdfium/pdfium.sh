@@ -110,9 +110,10 @@ echo "is_component_build = false" >> args.gn
 echo "clang_base_path=/fake_clang" >> args.gn
 echo "clang_use_chrome_plugins=false" >> args.gn
 gn gen out/$FUZZER/ 
-ninja -C "out/$FUZZER" pdfium_test
+ninja -C "out/$FUZZER" pdfium_all
 cp "out/$FUZZER/pdfium_test" $OUT/$FUZZER/
-cp "out/$FUZZER/snapshot_blob.bin" $OUT/$FUZZER/
+# cp "out/$FUZZER/snapshot_blob.bin" $OUT/$FUZZER/
+rm args.gn
 rm -r out/$FUZZER/
 
 
