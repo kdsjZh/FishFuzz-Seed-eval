@@ -19,6 +19,7 @@ if [ ! -d "/depot_tools" ]; then
 
 else
   
+  export PATH=/depot_tools:$PATH
   echo "reuse the /depot_tools"
 
 fi 
@@ -97,8 +98,18 @@ fi
 
 pushd $TARGET/repo/
 # gn args out/$FUZZER
-wget https://raw.githubusercontent.com/kdsjZh/FishFuzz-Seed-eval/main/target/pdfium/config/pdfium.gn.tar.gz 
-tar xzf pdfium.gn.tar.gz -C $PWD/ && mv out/aflpp out/$FUZZER/
+# wget https://raw.githubusercontent.com/kdsjZh/FishFuzz-Seed-eval/main/target/pdfium/config/pdfium.gn.tar.gz 
+# tar xzf pdfium.gn.tar.gz -C $PWD/ && mv out/aflpp out/$FUZZER/
+echo "use_goma = false" >> args.gn
+echo "is_debug = false" >> args.gn
+echo "pdf_use_skia = false" >> args.gn
+echo "pdf_enable_xfa = false" >> args.gn
+echo "pdf_enable_v8 = false" >> args.gn
+echo "pdf_is_standalone = true" >> args.gn
+echo "is_component_build = false" >> args.gn
+echo "clang_base_path=/fake_clang" >> args.gn
+echo "clang_use_chrome_plugins=false" >> args.gn
+gn gen out/$FUZZER/ 
 ninja -C "out/$FUZZER" pdfium_test
 cp "out/$FUZZER/pdfium_test" $OUT/$FUZZER/
 cp "out/$FUZZER/snapshot_blob.bin" $OUT/$FUZZER/
