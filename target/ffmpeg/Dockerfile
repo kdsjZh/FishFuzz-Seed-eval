@@ -6,9 +6,10 @@ RUN wget https://raw.githubusercontent.com/kdsjZh/FishFuzz-Seed-eval/main/target
     FUZZER=aflpp OUT=/out ./ffmpeg.sh 
 
 RUN mkdir -p /out/seeds && \
-    git clone https://github.com/strongcourage/fuzzing-corpus && \
-    find fuzzing-corpus -name *.mp4 -exec cp {} /out/seeds \; && \
-    rm -r fuzzing-corpus 
+    find /repo -name *.mp4 -exec cp {} /out/seeds \; && \
+    find /repo -name *.mov -exec cp {} /out/seeds \; && \
+    find /repo -name *.wav -exec cp {} /out/seeds \; && \
+    find /Fish++ -name *.mp4 -exec cp {} /out/seeds \;
 
 RUN cp -r /out/ffapp /out/ffexp && \
     echo "#!/bin/bash" > /out/ffexp/run.sh  && \

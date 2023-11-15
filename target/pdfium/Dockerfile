@@ -6,9 +6,7 @@ RUN wget https://raw.githubusercontent.com/kdsjZh/FishFuzz-Seed-eval/main/target
     FUZZER=aflpp OUT=/out ./pdfium.sh 
 
 RUN mkdir -p /out/seeds && \
-    git clone https://github.com/strongcourage/fuzzing-corpus && \
-    find fuzzing-corpus -name *.pdf -exec cp {} /out/seeds \; && \
-    rm -r fuzzing-corpus 
+    find /repo -name *.pdf -exec cp {} /out/seeds \; 
 
 RUN cp -r /out/ffapp /out/ffexp && \
     echo "#!/bin/bash" > /out/ffexp/run.sh  && \
