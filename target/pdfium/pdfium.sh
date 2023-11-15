@@ -24,20 +24,21 @@ else
 
 fi 
 
-# pdfium in total has ~297.6K functions, therefore set SIZE to 512K
-if [ "$FUZZER" = "ffapp" ]; then
+# pdfium with v8 in total has ~297.6K functions, therefore set SIZE to 512K
+# but if we build without v8, only have 19K functions
+# if [ "$FUZZER" = "ffapp" ]; then
 
-  pushd /llvm
-  sed -i 's/#define FUNC_SIZE_POW2 16/#define FUNC_SIZE_POW2 19/'  llvm/lib/Transforms/Instrumentation/FishFuzzAddressSanitizer.cpp
-  pushd build && make -j && popd 
-  popd 
-  pushd /Fish++ 
-  sed -i 's/#define FUNC_SIZE_POW2 16/#define FUNC_SIZE_POW2 19/' include/config.h 
-  make clean && NO_NYX=1 NO_X86=1 make source-only 
-  popd 
-  echo "[+] Successfully Reset FUNC_SIZE!"
+#   pushd /llvm
+#   sed -i 's/#define FUNC_SIZE_POW2 16/#define FUNC_SIZE_POW2 19/'  llvm/lib/Transforms/Instrumentation/FishFuzzAddressSanitizer.cpp
+#   pushd build && make -j && popd 
+#   popd 
+#   pushd /Fish++ 
+#   sed -i 's/#define FUNC_SIZE_POW2 16/#define FUNC_SIZE_POW2 19/' include/config.h 
+#   make clean && NO_NYX=1 NO_X86=1 make source-only 
+#   popd 
+#   echo "[+] Successfully Reset FUNC_SIZE!"
 
-fi 
+# fi 
 
 # rebuild with lld
 if [ ! command -v lld &> /dev/null ]; then 
@@ -63,6 +64,7 @@ if [ ! -d "$TARGET/repo" ]; then
   git checkout origin/chromium/4903
   gclient sync 
   ./build/install-build-deps.sh
+  popd
 
 else
   
@@ -107,11 +109,11 @@ echo "pdf_enable_xfa = false" >> args.gn
 echo "pdf_enable_v8 = false" >> args.gn
 echo "pdf_is_standalone = true" >> args.gn
 echo "is_component_build = false" >> args.gn
-echo "clang_base_path=/fake_clang" >> args.gn
+echo "clang_base_path=\"/fake_clang\"" >> args.gn
 echo "clang_use_chrome_plugins=false" >> args.gn
-mkdir out/$FUZZER && mv args.gn out/$FUZZER 
-gn gen out/$FUZZER/ 
-ninja -C "out/$FUZZER" pdfium_all
+mkdir -p "out/$FUZZER" && mv args.gn "out/$FUZZER/"
+gn gen "out/$FUZZER" 
+ninja -C "out/$FUZZER" pdfium_test
 cp "out/$FUZZER/pdfium_test" $OUT/$FUZZER/
 # cp "out/$FUZZER/snapshot_blob.bin" $OUT/$FUZZER/
 rm -r out/$FUZZER/
