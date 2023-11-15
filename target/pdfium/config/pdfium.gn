@@ -1,5 +1,5 @@
 use_goma = false  # Googlers only. Ensure goma is installed and running first.
-is_debug = true  # Enable debugging features.
+is_debug = false  # Enable debugging features.
 
 # Set true to enable experimental Skia backend.
 pdf_use_skia = false
