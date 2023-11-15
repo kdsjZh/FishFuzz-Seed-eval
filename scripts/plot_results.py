@@ -2,6 +2,7 @@
 
 import argparse
 from matplotlib import pyplot
+import math
 
 MAXIUM_TIME_H = 24
 SAMPLING_FREQ_M = 15
@@ -42,7 +43,12 @@ def parse_one_log(fname, log_type = 'cov'):
   return y_axis[:DATA_LEN]
 
 
-def plot_benchmark_n_trails(bench_results_dir, n_trial):
+def convert_log(num_execs):
+  for i in range(len(num_execs)):
+    num_execs[i] = math.log(num_execs[i], 10)
+  return num_execs
+
+def plot_benchmark_n_trails(bench_results_dir, n_trial, log_type = 'cov'):
   all_cov = dict() 
   fuzzer_cov_pair = dict()
   for fuzzer in fuzzer_list:
@@ -52,7 +58,7 @@ def plot_benchmark_n_trails(bench_results_dir, n_trial):
     average_among_trail = [0 for i in range(DATA_LEN)]
     for trail in range(n_trial):
       log_path = '%s/%s/%d/default/plot_data' % (bench_results_dir, fuzzer, trail)
-      all_cov[fuzzer][trail]  = parse_one_log(log_path)
+      all_cov[fuzzer][trail]  = parse_one_log(log_path, log_type = log_type)
       for i in range(DATA_LEN):
         average_among_trail[i] += all_cov[fuzzer][trail][i]
         if best_among_trail[i] < all_cov[fuzzer][trail][i]:
@@ -61,7 +67,10 @@ def plot_benchmark_n_trails(bench_results_dir, n_trial):
           worst_among_trail[i] = all_cov[fuzzer][trail][i]
     for i in range(DATA_LEN):
       average_among_trail[i] /= n_trial
-    fuzzer_cov_pair[fuzzer] = [best_among_trail, worst_among_trail, average_among_trail]
+    if log_type == 'execs':
+      fuzzer_cov_pair[fuzzer] = [convert_log(best_among_trail), convert_log(worst_among_trail), convert_log(average_among_trail)]
+    else:
+      fuzzer_cov_pair[fuzzer] = [best_among_trail, worst_among_trail, average_among_trail]
   return all_cov, fuzzer_cov_pair
 
 def write_plot_bench(plot_name, fuzzer_cov_pair):
@@ -83,9 +92,11 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument("-r", help="results dir to share the evaluation results ")
   parser.add_argument("-n", help="number of trial")
+  parser.add_argument("-t", help="log type, cov, queue or execs")
+
 
   args = parser.parse_args()
   for bench in benchmark_list:
-    all_cov, fuzzer_cov_pair = plot_benchmark_n_trails('%s/%s' % (args.r, bench), int(args.n))
-    write_plot_bench('fuzz-%s.png' % (bench), fuzzer_cov_pair)
+    all_cov, fuzzer_cov_pair = plot_benchmark_n_trails('%s/%s' % (args.r, bench), int(args.n), args.t)
+    write_plot_bench('fuzz-%s-%s.png' % (bench, args.t), fuzzer_cov_pair)
     
