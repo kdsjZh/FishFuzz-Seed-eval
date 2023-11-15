@@ -109,11 +109,11 @@ echo "pdf_is_standalone = true" >> args.gn
 echo "is_component_build = false" >> args.gn
 echo "clang_base_path=/fake_clang" >> args.gn
 echo "clang_use_chrome_plugins=false" >> args.gn
+mkdir out/$FUZZER && mv args.gn out/$FUZZER 
 gn gen out/$FUZZER/ 
 ninja -C "out/$FUZZER" pdfium_all
 cp "out/$FUZZER/pdfium_test" $OUT/$FUZZER/
 # cp "out/$FUZZER/snapshot_blob.bin" $OUT/$FUZZER/
-rm args.gn
 rm -r out/$FUZZER/
 
 
