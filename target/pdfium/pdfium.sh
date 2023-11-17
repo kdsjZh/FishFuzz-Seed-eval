@@ -10,7 +10,7 @@
 
 # preinstall 
 
-apt install -y sudo vim ninja-build 
+apt install -y sudo vim ninja-build curl
 
 if [ ! -d "/depot_tools" ]; then 
 
