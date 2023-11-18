@@ -53,6 +53,22 @@ if [ ! command -v lld &> /dev/null ]; then
 
 fi
 
+# pdfium with v8 in total has ~297.6K functions, therefore set SIZE to 512K
+if [ "$FUZZER" = "ffapp" ]; then
+
+  pushd /llvm
+  sed -i 's/#define FUNC_SIZE_POW2 16/#define FUNC_SIZE_POW2 19/'  llvm/lib/Transforms/Instrumentation/FishFuzzAddressSanitizer.cpp
+  pushd build && make -j && popd 
+  popd 
+  pushd /Fish++ 
+  sed -i 's/#define FUNC_SIZE_POW2 16/#define FUNC_SIZE_POW2 19/' include/config.h 
+  make clean && NO_NYX=1 NO_X86=1 make source-only 
+  popd 
+  echo "[+] Successfully Reset FUNC_SIZE!"
+
+fi 
+
+
 # fetch
 if [ ! -d "$TARGET/repo" ]; then
 
@@ -105,8 +121,8 @@ pushd $TARGET/repo/
 echo "use_goma = false" >> args.gn
 echo "is_debug = false" >> args.gn
 echo "pdf_use_skia = false" >> args.gn
-echo "pdf_enable_xfa = false" >> args.gn
-echo "pdf_enable_v8 = false" >> args.gn
+echo "pdf_enable_xfa = true" >> args.gn
+echo "pdf_enable_v8 = true" >> args.gn
 echo "pdf_is_standalone = true" >> args.gn
 echo "is_component_build = false" >> args.gn
 echo "clang_base_path=\"/fake_clang\"" >> args.gn

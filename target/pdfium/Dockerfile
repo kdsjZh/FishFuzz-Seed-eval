@@ -5,10 +5,11 @@ RUN wget https://raw.githubusercontent.com/kdsjZh/FishFuzz-Seed-eval/main/target
     FUZZER=ffapp OUT=/out ./pdfium.sh && \
     FUZZER=aflpp OUT=/out ./pdfium.sh 
 
-RUN mkdir -p /out/seeds && \
-    git clone https://github.com/strongcourage/fuzzing-corpus/ && \
-    find fuzzing-corpus/ -name *.pdf -exec cp {} /out/seeds \;  && \
-    rm -r fuzzing-corpus
+# svn checkout https://chromium.googlesource.com/chromium/src/+/refs/heads/main/pdf/pdfium/fuzzers/corpora/xfa/
+COPY pdfium_corpus.tar.gz /out
+
+RUN tar xzf /out/pdfium_corpus.tar.gz -C /out/ && \
+    mv /out/pdf /out/seeds 
 
 RUN cp -r /out/ffapp /out/ffexp && \
     echo "#!/bin/bash" > /out/ffexp/run.sh  && \
