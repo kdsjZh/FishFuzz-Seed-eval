@@ -131,7 +131,7 @@ mkdir -p "out/$FUZZER" && mv args.gn "out/$FUZZER/"
 gn gen "out/$FUZZER" 
 ninja -C "out/$FUZZER" pdfium_test
 cp "out/$FUZZER/pdfium_test" $OUT/$FUZZER/
-# cp "out/$FUZZER/snapshot_blob.bin" $OUT/$FUZZER/
+cp "out/$FUZZER/snapshot_blob.bin" $OUT/$FUZZER/
 rm -r out/$FUZZER/
 
 
