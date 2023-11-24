@@ -67,3 +67,8 @@ python3 scripts/plot_results.py -r $RESULT -n 5 -t cov -b wireshark
 # after the campaign, umount the disk
 sudo umount $WORKDIR
 ```
+
+### results
+
+We evaluate FishFuzz against AFL++ on 2 server equipped with Xeon Gold 5218 and 64GB memory. 
+The 10 round's results are available at https://drive.google.com/file/d/1Ojs-YEwniTmy_qLX--bndVZZ-o58qUR1/view?usp=sharing.
